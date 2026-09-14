@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>IdeaVault | Dashboard</title>
+
+    <link rel="stylesheet"
+          href="dashboard.css">
+
+</head>
+
+<body>
+
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <div class="logo-box">
+            IV
+        </div>
+
+        <span>IdeaVault</span>
+
+    </div>
+
+
+    <nav>
+
+        <a href="#home" class="nav-link active">
+            <span>⌂</span>
+            Dashboard
+        </a>
+
+        <a href="#profile" class="nav-link">
+            <span>◯</span>
+            My Profile
+        </a>
+
+        <a href="#share" class="nav-link">
+            <span>＋</span>
+            Share Idea
+        </a>
+
+        <a href="#explore" class="nav-link">
+            <span>⌕</span>
+            Explore Ideas
+        </a>
+
+        <a href="#team" class="nav-link">
+            <span>♧</span>
+            Find Team
+        </a>
+
+        <a href="#project" class="nav-link">
+            <span>▣</span>
+            My Project
+        </a>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+        <a href="index.html">
+            ← Website
+        </a>
+
+        <button id="logoutBtn">
+            ↪ Logout
+        </button>
+
+    </div>
+
+</aside>
+
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+
+    <!-- TOP BAR -->
+
+    <header class="topbar">
+
+        <div>
+
+            <span class="small-title">
+                STUDENT WORKSPACE
+            </span>
+
+            <h2>
+                Dashboard
+            </h2>
+
+        </div>
+
+
+        <div class="user-area">
+
+            <div class="user-avatar"
+                 id="userAvatar">
+                ?
+            </div>
+
+            <div>
+
+                <strong id="userName">
+                    Student
+                </strong>
+
+                <small>
+                    IdeaVault Student
+                </small>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ================= HOME ================= -->
+
+    <section id="home"
+             class="dashboard-home">
+
+
+        <div class="welcome">
+
+            <span>
+                ✦ WELCOME TO IDEAVAULT
+            </span>
+
+            <h1>
+                Build something
+                <strong>great together.</strong>
+            </h1>
+
+            <p>
+                Share your ideas, discover projects,
+                find the right teammates and start
+                building together.
+            </p>
+
+        </div>
+
+
+        <!-- EMPTY QUICK ACTIONS -->
+
+        <div class="quick-actions">
+
+
+            <a href="#share"
+               class="action-card">
+
+                <div class="action-icon">
+                    ＋
+                </div>
+
+                <div>
+
+                    <h3>
+                        Share an Idea
+                    </h3>
+
+                    <p>
+                        Have a project idea?
+                        Add it here.
+                    </p>
+
+                </div>
+
+                <span class="arrow">
+                    →
+                </span>
+
+            </a>
+
+
+
+            <a href="#explore"
+               class="action-card">
+
+                <div class="action-icon">
+                    ⌕
+                </div>
+
+                <div>
+
+                    <h3>
+                        Explore Ideas
+                    </h3>
+
+                    <p>
+                        Discover projects shared
+                        by other students.
+                    </p>
+
+                </div>
+
+                <span class="arrow">
+                    →
+                </span>
+
+            </a>
+
+
+
+            <a href="#team"
+               class="action-card">
+
+                <div class="action-icon">
+                    ♧
+                </div>
+
+                <div>
+
+                    <h3>
+                        Find Team Members
+                    </h3>
+
+                    <p>
+                        Find students with the
+                        skills you need.
+                    </p>
+
+                </div>
+
+                <span class="arrow">
+                    →
+                </span>
+
+            </a>
+
+
+        </div>
+
+
+        <!-- EMPTY STATE -->
+
+        <div class="empty-dashboard">
+
+            <div class="empty-icon">
+                ✦
+            </div>
+
+            <h2>
+                Your workspace is ready
+            </h2>
+
+            <p>
+                Start by creating your profile or
+                sharing your first project idea.
+            </p>
+
+            <a href="#profile"
+               class="blue-btn">
+
+                Create My Profile
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================= PROFILE ================= -->
+
+    <section id="profile"
+             class="section">
+
+
+        <div class="section-heading">
+
+            <span>
+                YOUR INFORMATION
+            </span>
+
+            <h2>
+                Create Your Profile
+            </h2>
+
+            <p>
+                Add your information so other students
+                can find you for projects.
+            </p>
+
+        </div>
+
+
+        <div class="profile-form-card">
+
+
+            <form id="profileForm">
+
+
+                <div class="form-grid">
+
+
+                    <div class="field">
+
+                        <label>
+                            Full Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="fullName"
+                            placeholder="Enter your full name"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label>
+                            Course / Branch
+                        </label>
+
+                        <input
+                            type="text"
+                            id="course"
+                            placeholder="e.g. CSE"
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label>
+                            Year
+                        </label>
+
+                        <select id="year">
+
+                            <option value="">
+                                Select year
+                            </option>
+
+                            <option>
+                                First Year
+                            </option>
+
+                            <option>
+                                Second Year
+                            </option>
+
+                            <option>
+                                Third Year
+                            </option>
+
+                            <option>
+                                Final Year
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label>
+                            College
+                        </label>
+
+                        <input
+                            type="text"
+                            id="college"
+                            placeholder="Enter your college"
+                        >
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- SKILLS -->
+
+                <div class="field full">
+
+                    <label>
+                        Skills
+                    </label>
+
+                    <input
+                        type="text"
+                        id="skills"
+                        placeholder="e.g. Python, HTML, Figma, C"
+                    >
+
+                    <small>
+                        Separate multiple skills with commas.
+                    </small>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="blue-btn">
+
+                    Save Profile
+
+                </button>
+
+
+                <p id="profileMessage"
+                   class="message">
+                </p>
+
+
+            </form>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================= SHARE IDEA ================= -->
+
+    <section id="share"
+             class="section">
+
+
+        <div class="section-heading">
+
+            <span>
+                CREATE
+            </span>
+
+            <h2>
+                Share Your Project Idea
+            </h2>
+
+            <p>
+                Enter your own project idea and
+                let other students discover it.
+            </p>
+
+        </div>
+
+
+        <div class="idea-form-card">
+
+
+            <form id="ideaForm">
+
+
+                <div class="field">
+
+                    <label>
+                        Project Title
+                    </label>
+
+                    <input
+                        type="text"
+                        id="ideaTitle"
+                        placeholder="Enter your project title"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-grid">
+
+
+                    <div class="field">
+
+                        <label>
+                            Category
+                        </label>
+
+                        <select id="ideaCategory"
+                                required>
+
+                            <option value="">
+                                Select category
+                            </option>
+
+                            <option>
+                                Web Development
+                            </option>
+
+                            <option>
+                                App Development
+                            </option>
+
+                            <option>
+                                AI / ML
+                            </option>
+
+                            <option>
+                                FinTech
+                            </option>
+
+                            <option>
+                                UI/UX
+                            </option>
+
+                            <option>
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label>
+                            Team Size Needed
+                        </label>
+
+                        <input
+                            type="number"
+                            id="teamSize"
+                            min="1"
+                            placeholder="e.g. 3"
+                        >
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        Project Description
+                    </label>
+
+                    <textarea
+                        id="ideaDescription"
+                        rows="6"
+                        placeholder="Describe your project idea..."
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        Skills Needed
+                    </label>
+
+                    <input
+                        type="text"
+                        id="neededSkills"
+                        placeholder="e.g. Python, UI/UX, JavaScript"
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="blue-btn">
+
+                    Publish Idea →
+
+                </button>
+
+
+                <p id="ideaMessage"
+                   class="message">
+                </p>
+
+
+            </form>
+
+
+            <!-- USER'S OWN IDEAS -->
+
+            <div class="user-content">
+
+                <h3>
+                    My Shared Ideas
+                </h3>
+
+                <div id="myIdeas"
+                     class="empty-content">
+
+                    <div>
+                        ＋
+                    </div>
+
+                    <p>
+                        Your shared project ideas
+                        will appear here.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================= EXPLORE ================= -->
+
+    <section id="explore"
+             class="section">
+
+
+        <div class="section-heading">
+
+            <span>
+                DISCOVER
+            </span>
+
+            <h2>
+                Explore Project Ideas
+            </h2>
+
+            <p>
+                Search for project ideas shared
+                by students.
+            </p>
+
+        </div>
+
+
+        <div class="search-bar">
+
+            <span>
+                ⌕
+            </span>
+
+            <input
+                type="text"
+                id="searchIdeas"
+                placeholder="Search by project name, category or skill..."
+            >
+
+        </div>
+
+
+        <div id="exploreResults"
+             class="empty-explore">
+
+            <div class="big-search-icon">
+                ⌕
+            </div>
+
+            <h3>
+                No project ideas yet
+            </h3>
+
+            <p>
+                Project ideas shared by students
+                will appear here.
+            </p>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================= TEAM ================= -->
+
+    <section id="team"
+             class="section">
+
+
+        <div class="section-heading">
+
+            <span>
+                COLLABORATE
+            </span>
+
+            <h2>
+                Find Team Members
+            </h2>
+
+            <p>
+                Search for students based on
+                their skills.
+            </p>
+
+        </div>
+
+
+        <div class="search-bar">
+
+            <span>
+                ⌕
+            </span>
+
+            <input
+                type="text"
+                id="searchMembers"
+                placeholder="Search by name or skill..."
+            >
+
+        </div>
+
+
+        <div class="empty-team">
+
+            <div class="team-icon">
+                ♧
+            </div>
+
+            <h3>
+                No team members to show yet
+            </h3>
+
+            <p>
+                Students who create profiles
+                will appear here.
+            </p>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================= PROJECT ================= -->
+
+    <section id="project"
+             class="section">
+
+
+        <div class="section-heading">
+
+            <span>
+                YOUR WORK
+            </span>
+
+            <h2>
+                My Project
+            </h2>
+
+            <p>
+                Manage your project tasks and
+                track your progress.
+            </p>
+
+        </div>
+
+
+        <!-- CREATE PROJECT -->
+
+        <div class="project-create-card">
+
+
+            <div class="project-icon">
+                ▣
+            </div>
+
+
+            <h3>
+                Create Your Project Workspace
+            </h3>
+
+
+            <p>
+                Add a project to start managing
+                tasks and tracking progress.
+            </p>
+
+
+            <form id="projectForm">
+
+
+                <div class="form-grid">
+
+                    <div class="field">
+
+                        <label>
+                            Project Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="projectName"
+                            placeholder="Enter project name"
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label>
+                            Project Category
+                        </label>
+
+                        <select id="projectType">
+
+                            <option value="">
+                                Select category
+                            </option>
+
+                            <option>
+                                Web Development
+                            </option>
+
+                            <option>
+                                App Development
+                            </option>
+
+                            <option>
+                                AI / ML
+                            </option>
+
+                            <option>
+                                FinTech
+                            </option>
+
+                            <option>
+                                UI/UX
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="blue-btn">
+
+                    Create Project
+
+                </button>
+
+
+            </form>
+
+        </div>
+
+
+        <!-- PROJECT WILL APPEAR HERE -->
+
+        <div id="projectWorkspace"
+             class="project-workspace hidden">
+
+
+            <div class="project-header">
+
+                <div>
+
+                    <span id="displayCategory">
+                    </span>
+
+                    <h3 id="displayProject">
+                    </h3>
+
+                </div>
+
+
+                <strong id="progressNumber">
+                    0%
+                </strong>
+
+            </div>
+
+
+            <!-- PROGRESS -->
+
+            <div class="progress-area">
+
+                <div class="progress-track">
+
+                    <div id="progressBar">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- TASKS -->
+
+            <h4>
+                Project Tasks
+            </h4>
+
+
+            <div id="taskList">
+
+                <p class="no-task">
+                    No tasks added yet.
+                </p>
+
+            </div>
+
+
+            <!-- ADD TASK -->
+
+            <div class="add-task">
+
+                <input
+                    type="text"
+                    id="taskInput"
+                    placeholder="Enter a project task"
+                >
+
+                <button id="addTask">
+                    + Add Task
+                </button>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <span>
+            © 2026 IdeaVault
+        </span>
+
+        <span>
+            Build Together • Create Together
+        </span>
+
+    </footer>
+
+
+</main>
+
+
+<script src="dashboard.js"></script>
+
+</body>
+
+</html>

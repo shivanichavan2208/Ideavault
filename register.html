@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account | IdeaVault</title>
+
+    <link rel="stylesheet" href="register.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+
+        <a href="index.html" class="logo">
+            <div class="logo-icon">IV</div>
+            <span>IdeaVault</span>
+        </a>
+
+        <a href="index.html" class="back-home">
+            ← Back to Home
+        </a>
+
+    </nav>
+
+
+    <!-- REGISTER SECTION -->
+    <main class="register-section">
+
+        <div class="register-container">
+
+
+            <!-- LEFT SIDE -->
+            <div class="register-visual">
+
+                <div class="glow glow-one"></div>
+                <div class="glow glow-two"></div>
+
+                <div class="visual-content">
+
+                    <div class="small-badge">
+                        <span>✦</span>
+                        BUILD TOGETHER
+                    </div>
+
+                    <h1>
+                        Your Ideas.
+                        <span>Your Team.</span>
+                        Your Project.
+                    </h1>
+
+                    <p>
+                        Create your IdeaVault account and start
+                        discovering students, ideas and projects
+                        that match your interests.
+                    </p>
+
+
+                    <!-- ILLUSTRATION -->
+                    <div class="illustration">
+
+                        <!-- IDEA CARD -->
+                        <div class="idea-card idea-one">
+
+                            <div class="idea-icon">
+                                💡
+                            </div>
+
+                            <div>
+                                <strong>Project Idea</strong>
+                                <small>Smart Campus App</small>
+                            </div>
+
+                        </div>
+
+
+                        <!-- PROFILE CARD -->
+                        <div class="profile-card">
+
+                            <div class="profile-avatar">
+                                S
+                            </div>
+
+                            <div class="profile-info">
+
+                                <strong>Student Profile</strong>
+
+                                <div class="skills">
+                                    <span>Python</span>
+                                    <span>UI/UX</span>
+                                    <span>Web Dev</span>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- PEOPLE -->
+                        <div class="person person-one">
+                            S
+                        </div>
+
+                        <div class="person person-two">
+                            A
+                        </div>
+
+                        <div class="person person-three">
+                            M
+                        </div>
+
+
+                        <!-- CONNECTION DOTS -->
+                        <div class="dot dot-one"></div>
+                        <div class="dot dot-two"></div>
+                        <div class="dot dot-three"></div>
+
+
+                        <!-- PUZZLE SHAPES -->
+                        <div class="puzzle puzzle-one">
+                            +
+                        </div>
+
+                        <div class="puzzle puzzle-two">
+                            +
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- RIGHT REGISTER CARD -->
+            <div class="register-card">
+
+
+                <!-- HEADING -->
+                <div class="register-heading">
+
+                    <div class="mobile-logo">
+
+                        <div class="logo-icon">
+                            IV
+                        </div>
+
+                        <span>
+                            IdeaVault
+                        </span>
+
+                    </div>
+
+                    <h2>Create Your Account</h2>
+
+                    <p>
+                        Join students and start building projects together.
+                    </p>
+
+                </div>
+
+
+                <!-- FORM -->
+                <form id="registerForm">
+
+
+                    <!-- FULL NAME -->
+                    <div class="form-group">
+
+                        <label for="name">
+                            Full Name
+                        </label>
+
+                        <div class="input-box">
+
+                            <span class="input-icon">
+                                👤
+                            </span>
+
+                            <input
+                                type="text"
+                                id="name"
+                                placeholder="Enter your full name"
+                                required
+                            >
+
+                        </div>
+
+                        <small
+                            class="error"
+                            id="nameError">
+                        </small>
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+                    <div class="form-group">
+
+                        <label for="email">
+                            Email Address
+                        </label>
+
+                        <div class="input-box">
+
+                            <span class="input-icon">
+                                ✉
+                            </span>
+
+                            <input
+                                type="email"
+                                id="email"
+                                placeholder="Enter your email"
+                                required
+                            >
+
+                        </div>
+
+                        <small
+                            class="error"
+                            id="emailError">
+                        </small>
+
+                    </div>
+
+
+                    <!-- PASSWORD -->
+                    <div class="form-group">
+
+                        <label for="password">
+                            Password
+                        </label>
+
+                        <div class="input-box">
+
+                            <span class="input-icon">
+                                🔒
+                            </span>
+
+                            <input
+                                type="password"
+                                id="password"
+                                placeholder="Create a password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="show-password"
+                                id="togglePassword">
+                                👁
+                            </button>
+
+                        </div>
+
+                        <small
+                            class="error"
+                            id="passwordError">
+                        </small>
+
+                    </div>
+
+
+                    <!-- CONFIRM PASSWORD -->
+                    <div class="form-group">
+
+                        <label for="confirmPassword">
+                            Confirm Password
+                        </label>
+
+                        <div class="input-box">
+
+                            <span class="input-icon">
+                                🔐
+                            </span>
+
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                placeholder="Confirm your password"
+                                required
+                            >
+
+                        </div>
+
+                        <small
+                            class="error"
+                            id="confirmError">
+                        </small>
+
+                    </div>
+
+
+                    <!-- TERMS -->
+                    <div class="terms">
+
+                        <label>
+
+                            <input
+                                type="checkbox"
+                                id="terms"
+                                required
+                            >
+
+                            <span>
+                                I agree to the IdeaVault
+                                <a href="#">Terms & Conditions</a>
+                            </span>
+
+                        </label>
+
+                    </div>
+
+
+                    <!-- REGISTER BUTTON -->
+                    <button
+                        type="submit"
+                        class="register-btn">
+
+                        <span>
+                            Create My Account
+                        </span>
+
+                        <span class="arrow">
+                            →
+                        </span>
+
+                    </button>
+
+
+                    <!-- MESSAGE -->
+                    <p
+                        id="registerMessage"
+                        class="register-message">
+                    </p>
+
+                </form>
+
+
+                <!-- LOGIN LINK -->
+                <div class="login-text">
+
+                    Already have an account?
+
+                    <a href="login.html">
+                        Login here
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <script src="register.js"></script>
+
+</body>
+
+</html>

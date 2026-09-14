@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | IdeaVault</title>
+
+    <link rel="stylesheet" href="login.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+
+        <a href="index.html" class="logo">
+            <div class="logo-icon">IV</div>
+            <span>IdeaVault</span>
+        </a>
+
+        <a href="index.html" class="back-home">
+            ← Back to Home
+        </a>
+
+    </nav>
+
+
+    <!-- LOGIN SECTION -->
+    <main class="login-section">
+
+        <div class="login-container">
+
+            <!-- LEFT SIDE -->
+            <div class="login-visual">
+
+                <div class="glow glow-one"></div>
+                <div class="glow glow-two"></div>
+
+                <div class="visual-content">
+
+                    <div class="small-badge">
+                        <span>✦</span>
+                        STUDENT COLLABORATION
+                    </div>
+
+                    <h1>
+                        Bring Your
+                        <span>Ideas</span>
+                        to Life.
+                    </h1>
+
+                    <p>
+                        Sign in to explore project ideas, connect with
+                        students and build something amazing together.
+                    </p>
+
+                    <!-- Illustration -->
+                    <div class="illustration">
+
+                        <div class="idea-card card-one">
+                            <span>💡</span>
+                            <div>
+                                <strong>New Idea</strong>
+                                <small>AI Study Assistant</small>
+                            </div>
+                        </div>
+
+                        <div class="idea-card card-two">
+                            <span>👥</span>
+                            <div>
+                                <strong>Team Found</strong>
+                                <small>3 members joined</small>
+                            </div>
+                        </div>
+
+                        <div class="circle-person person-one">S</div>
+                        <div class="circle-person person-two">A</div>
+                        <div class="circle-person person-three">M</div>
+
+                        <div class="connection-line line-one"></div>
+                        <div class="connection-line line-two"></div>
+                        <div class="connection-line line-three"></div>
+
+                        <div class="puzzle puzzle-one">+</div>
+                        <div class="puzzle puzzle-two">+</div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- RIGHT SIDE -->
+            <div class="login-card">
+
+                <div class="login-heading">
+
+                    <div class="mobile-logo">
+                        <div class="logo-icon">IV</div>
+                        <span>IdeaVault</span>
+                    </div>
+
+                    <h2>Welcome Back!</h2>
+
+                    <p>
+                        Login to continue your collaboration journey.
+                    </p>
+
+                </div>
+
+
+                <!-- FORM -->
+                <form id="loginForm">
+
+                    <!-- EMAIL -->
+                    <div class="form-group">
+
+                        <label for="email">
+                            Email Address
+                        </label>
+
+                        <div class="input-box">
+
+                            <span class="input-icon">✉</span>
+
+                            <input
+                                type="email"
+                                id="email"
+                                placeholder="Enter your email"
+                                required
+                            >
+
+                        </div>
+
+                        <small class="error" id="emailError"></small>
+
+                    </div>
+
+
+                    <!-- PASSWORD -->
+                    <div class="form-group">
+
+                        <div class="password-label">
+
+                            <label for="password">
+                                Password
+                            </label>
+
+                            <a href="#" id="forgotPassword">
+                                Forgot Password?
+                            </a>
+
+                        </div>
+
+                        <div class="input-box">
+
+                            <span class="input-icon">🔒</span>
+
+                            <input
+                                type="password"
+                                id="password"
+                                placeholder="Enter your password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="show-password"
+                                id="togglePassword"
+                            >
+                                👁
+                            </button>
+
+                        </div>
+
+                        <small class="error" id="passwordError"></small>
+
+                    </div>
+
+
+                    <!-- REMEMBER -->
+                    <div class="remember-row">
+
+                        <label class="remember">
+
+                            <input type="checkbox" id="remember">
+
+                            <span>Remember me</span>
+
+                        </label>
+
+                    </div>
+
+
+                    <!-- LOGIN BUTTON -->
+                    <button type="submit" class="login-btn">
+
+                        <span>Login to IdeaVault</span>
+
+                        <span class="arrow">→</span>
+
+                    </button>
+
+
+                    <!-- STATUS MESSAGE -->
+                    <p id="loginMessage" class="login-message"></p>
+
+                </form>
+
+
+                <!-- REGISTER -->
+                <div class="register-text">
+
+                    Don't have an account?
+
+                    <a href="register.html">
+                        Create an account
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <script src="login.js"></script>
+
+</body>
+
+</html>
