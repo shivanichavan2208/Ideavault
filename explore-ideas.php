@@ -347,7 +347,7 @@ $ideas = [
 
     <div class="container-fluid">
 
-        <a href="index.php" class="brand">
+        <a href="index.html" class="brand">
             <span class="brand-icon">💡</span>
             IdeaVault
         </a>
@@ -365,7 +365,7 @@ $ideas = [
             <ul class="navbar-nav mx-auto">
 
                 <li class="nav-item">
-                    <a class="nav-link" href="index.php">Home</a>
+                    <a class="nav-link" href="index.html">Home</a>
                 </li>
 
                 <li class="nav-item">
@@ -389,8 +389,8 @@ $ideas = [
             </ul>
 
             <div>
-                <a href="login.php" class="login-btn">Login</a>
-                <a href="register.php" class="register-btn">Register</a>
+                <a href="login.html" class="login-btn">Login</a>
+                <a href="register.html" class="register-btn">Register</a>
             </div>
 
         </div>
