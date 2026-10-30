@@ -1,634 +1,929 @@
+
 <?php
-// Sample project ideas
-$ideas = [
-    [
-        "title" => "Smart Attendance System",
-        "description" => "An attendance system using face recognition to automatically mark student attendance.",
-        "category" => "AI & ML",
-        "difficulty" => "Intermediate",
-        "technologies" => ["Python", "OpenCV", "MySQL"],
-        "members" => 3
-    ],
-    [
-        "title" => "Campus Lost & Found",
-        "description" => "A platform where students can report lost items and help others find their belongings.",
-        "category" => "Web Development",
-        "difficulty" => "Beginner",
-        "technologies" => ["HTML", "CSS", "PHP", "MySQL"],
-        "members" => 4
-    ],
-    [
-        "title" => "Student Expense Tracker",
-        "description" => "A simple application to track daily expenses and manage monthly student budgets.",
-        "category" => "Finance",
-        "difficulty" => "Beginner",
-        "technologies" => ["HTML", "JavaScript", "PHP"],
-        "members" => 2
-    ],
-    [
-        "title" => "Smart Study Planner",
-        "description" => "Helps students organize subjects, assignments, deadlines and study schedules.",
-        "category" => "Education",
-        "difficulty" => "Intermediate",
-        "technologies" => ["Bootstrap", "JavaScript", "PHP"],
-        "members" => 3
-    ],
-    [
-        "title" => "EcoTrack",
-        "description" => "A platform that helps students track their daily environmental impact and activities.",
-        "category" => "Environment",
-        "difficulty" => "Intermediate",
-        "technologies" => ["HTML", "CSS", "JavaScript"],
-        "members" => 4
-    ],
-    [
-        "title" => "AI Resume Analyzer",
-        "description" => "Analyzes resumes and provides suggestions to improve skills and job compatibility.",
-        "category" => "AI & ML",
-        "difficulty" => "Advanced",
-        "technologies" => ["Python", "AI", "NLP"],
-        "members" => 4
-    ]
-];
+session_start();
+
+/* --------------------------------
+   DATABASE CONNECTION
+--------------------------------- */
+
+$host = "localhost";
+$dbname = "ideavault";
+$username = "root";
+$password = "";
+
+try {
+    $conn = new PDO(
+        "mysql:host=$host;dbname=$dbname;charset=utf8mb4",
+        $username,
+        $password
+    );
+
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+} catch (PDOException $e) {
+    die("Database connection failed. Please check your database settings.");
+}
+
+/* --------------------------------
+   SEARCH AND CATEGORY FILTER
+--------------------------------- */
+
+$search = trim($_GET['search'] ?? '');
+$category = trim($_GET['category'] ?? '');
+
+$sql = "SELECT * FROM projects WHERE status = 'approved'";
+$params = [];
+
+if ($search !== '') {
+    $sql .= " AND (
+        title LIKE :search1
+        OR description LIKE :search2
+        OR skills_needed LIKE :search3
+        OR category LIKE :search4
+    )";
+
+    $keyword = "%" . $search . "%";
+
+    $params[':search1'] = $keyword;
+    $params[':search2'] = $keyword;
+    $params[':search3'] = $keyword;
+    $params[':search4'] = $keyword;
+}
+
+if ($category !== '') {
+    $sql .= " AND category = :category";
+    $params[':category'] = $category;
+}
+
+$sql .= " ORDER BY created_at DESC";
+
+$stmt = $conn->prepare($sql);
+$stmt->execute($params);
+
+$projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+/* --------------------------------
+   GET PROJECT CATEGORIES
+--------------------------------- */
+
+$categoryQuery = $conn->query(
+    "SELECT DISTINCT category FROM projects
+     WHERE status = 'approved'
+     ORDER BY category ASC"
+);
+
+$categories = $categoryQuery->fetchAll(PDO::FETCH_COLUMN);
+
+/* --------------------------------
+   HELPER FUNCTION
+--------------------------------- */
+
+function clean($value) {
+    return htmlspecialchars(
+        $value ?? '',
+        ENT_QUOTES,
+        'UTF-8'
+    );
+}
+
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>Explore Ideas | IdeaVault</title>
 
-    <!-- Bootstrap -->
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
-
     <style>
 
+        /* --------------------------------
+           GENERAL STYLING
+        --------------------------------- */
+
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
         }
 
         body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background: linear-gradient(135deg, #061a46, #062b6f, #06458e);
-            color: white;
+            background: #061b49;
+            color: #ffffff;
             min-height: 100vh;
         }
 
-        /* NAVBAR */
-
-        .navbar-custom {
-            background: rgba(4, 20, 55, 0.95);
-            border-bottom: 1px solid rgba(56, 189, 248, 0.35);
-            padding: 14px 5%;
+        a {
+            text-decoration: none;
+            color: inherit;
         }
 
-        .brand {
-            font-size: 25px;
+        /* --------------------------------
+           DASHBOARD LAYOUT
+        --------------------------------- */
+
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --------------------------------
+           SIDEBAR
+        --------------------------------- */
+
+        .sidebar {
+            width: 250px;
+            min-width: 250px;
+            background: linear-gradient(
+                180deg,
+                #0874c9,
+                #064b9e
+            );
+
+            padding: 25px 18px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            font-size: 23px;
             font-weight: bold;
-            color: white;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            margin-bottom: 45px;
+            padding-left: 8px;
         }
 
-        .brand-icon {
-            width: 38px;
-            height: 38px;
-            background: linear-gradient(135deg, #20cfff, #1677ff);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 21px;
+        .logo span {
+            background: #16c9f5;
+            padding: 9px;
+            border-radius: 10px;
+            margin-right: 7px;
         }
 
-        .nav-link {
-            color: #dceeff !important;
-            font-weight: 500;
-            margin: 0 10px;
-        }
-
-        .nav-link:hover {
-            color: #28d7ff !important;
-        }
-
-        .login-btn {
-            border: 1px solid #3caeff;
-            color: white;
-            padding: 8px 18px;
-            border-radius: 8px;
-            text-decoration: none;
-            margin-right: 8px;
-        }
-
-        .register-btn {
-            background: linear-gradient(135deg, #24cfff, #1685ed);
-            color: white;
-            padding: 9px 18px;
-            border-radius: 8px;
-            text-decoration: none;
-        }
-
-        /* PAGE HEADER */
-
-        .page-header {
-            padding: 55px 7% 30px;
-        }
-
-        .small-title {
-            color: #28d7ff;
+        .menu a {
+            display: block;
+            padding: 13px 15px;
+            margin-bottom: 9px;
+            border-radius: 10px;
+            color: #d8ecff;
             font-size: 14px;
-            font-weight: bold;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-        }
-
-        .page-header h1 {
-            font-size: 42px;
-            font-weight: 700;
-            margin-top: 10px;
-        }
-
-        .page-header p {
-            color: #c5ddf5;
-            max-width: 650px;
-            font-size: 17px;
-        }
-
-        /* SEARCH AREA */
-
-        .search-section {
-            padding: 0 7% 35px;
-        }
-
-        .search-box {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(76, 190, 255, 0.35);
-            border-radius: 15px;
-            padding: 20px;
-            backdrop-filter: blur(10px);
-        }
-
-        .search-input {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(120,200,255,0.3);
-            color: white;
-            border-radius: 9px;
-            padding: 12px 15px;
-        }
-
-        .search-input::placeholder {
-            color: #aac7e4;
-        }
-
-        .search-input:focus {
-            background: rgba(255,255,255,0.1);
-            color: white;
-            border-color: #27d5ff;
-            box-shadow: 0 0 10px rgba(39,213,255,0.25);
-        }
-
-        .filter-btn {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(120,200,255,0.3);
-            color: white;
-            border-radius: 9px;
-            padding: 11px 18px;
-        }
-
-        .filter-btn:hover {
-            background: #168fe9;
-            color: white;
-        }
-
-        /* IDEA CARDS */
-
-        .ideas-section {
-            padding: 0 7% 60px;
-        }
-
-        .idea-card {
-            height: 100%;
-            background: rgba(7, 32, 77, 0.82);
-            border: 1px solid rgba(65, 180, 255, 0.28);
-            border-radius: 17px;
-            padding: 23px;
             transition: 0.3s;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
 
-        .idea-card:hover {
-            transform: translateY(-6px);
-            border-color: #24cfff;
-            box-shadow: 0 10px 30px rgba(20, 194, 255, 0.18);
-        }
-
-        .category {
-            display: inline-block;
-            background: rgba(32, 202, 255, 0.13);
-            color: #35d9ff;
-            border: 1px solid rgba(53,217,255,0.3);
-            padding: 5px 11px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 14px;
-        }
-
-        .idea-card h3 {
-            font-size: 21px;
-            margin-bottom: 10px;
+        .menu a:hover,
+        .menu a.active {
+            background: #16aee9;
             color: white;
+            box-shadow: 0 4px 15px #001b4560;
         }
 
-        .idea-card p {
-            color: #bdd3eb;
-            font-size: 14px;
-            line-height: 1.6;
-            min-height: 67px;
+        .sidebar-bottom {
+            margin-top: auto;
+            padding-top: 35px;
         }
 
-        .difficulty {
-            font-size: 12px;
-            color: #8edbff;
-            margin-bottom: 13px;
+        .sidebar-bottom a {
+            display: block;
+            padding: 10px;
+            font-size: 13px;
+            color: #d5eaff;
         }
 
-        .tech-tag {
-            display: inline-block;
-            background: #092d60;
-            color: #cdeaff;
-            padding: 5px 9px;
-            border-radius: 6px;
-            font-size: 11px;
-            margin: 2px;
+        /* --------------------------------
+           MAIN CONTENT
+        --------------------------------- */
+
+        .main-content {
+            flex: 1;
+            padding: 35px 40px;
+            overflow: hidden;
+            background:
+                radial-gradient(
+                    circle at top right,
+                    #0872c9 0%,
+                    transparent 35%
+                ),
+                linear-gradient(
+                    135deg,
+                    #08245b,
+                    #061943
+                );
         }
 
-        .card-bottom {
-            border-top: 1px solid rgba(255,255,255,0.1);
-            margin-top: 18px;
-            padding-top: 15px;
+        .topbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid #3679bb;
+            padding-bottom: 22px;
+            margin-bottom: 35px;
         }
 
-        .members {
-            color: #a9c8e8;
+        .topbar small {
+            color: #39d7ff;
+            font-size: 11px;
+            letter-spacing: 2px;
+        }
+
+        .topbar h2 {
+            font-size: 24px;
+            margin-top: 5px;
+        }
+
+        .profile {
+            background: #0878cb;
+            padding: 11px 18px;
+            border-radius: 25px;
             font-size: 13px;
+        }
+
+        /* --------------------------------
+           PAGE INTRODUCTION
+        --------------------------------- */
+
+        .intro {
+            margin-bottom: 28px;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #087bc4;
+            border: 1px solid #36caff;
+            color: #8beaff;
+            padding: 7px 15px;
+            border-radius: 25px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 17px;
+        }
+
+        .intro h1 {
+            font-size: 34px;
+            margin-bottom: 12px;
+        }
+
+        .intro h1 span {
+            color: #20c9f5;
+        }
+
+        .intro p {
+            color: #b7d5f5;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        /* --------------------------------
+           SEARCH SECTION
+        --------------------------------- */
+
+        .search-section {
+            background: #0c3977;
+            border: 1px solid #297cc0;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 12px;
+        }
+
+        .search-input,
+        .category-select {
+            background: #0755a5;
+            color: white;
+            border: 1px solid #318bd0;
+            padding: 14px;
+            border-radius: 9px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .search-input::placeholder {
+            color: #c1dfff;
+        }
+
+        .category-select {
+            min-width: 175px;
+            cursor: pointer;
+        }
+
+        .category-select option {
+            background: #07336c;
+        }
+
+        .search-btn {
+            background: linear-gradient(
+                90deg,
+                #16bce9,
+                #19d4ef
+            );
+
+            color: white;
+            border: none;
+            padding: 13px 24px;
+            border-radius: 9px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px #16c9f566;
+        }
+
+        .clear-btn {
+            display: inline-block;
+            color: #8deaff;
+            margin-top: 12px;
+            font-size: 13px;
+        }
+
+        /* --------------------------------
+           RESULTS HEADER
+        --------------------------------- */
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0 20px;
+        }
+
+        .results-header h2 {
+            font-size: 21px;
+        }
+
+        .results-count {
+            color: #76dfff;
+            font-size: 13px;
+        }
+
+        /* --------------------------------
+           PROJECT CARDS
+        --------------------------------- */
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(260px, 1fr)
+            );
+
+            gap: 22px;
+        }
+
+        .project-card {
+            background: linear-gradient(
+                145deg,
+                #1057a2,
+                #0b3474
+            );
+
+            border: 1px solid #3289d0;
+            border-radius: 15px;
+            padding: 22px;
+            transition: 0.3s;
+            box-shadow: 0 7px 20px #00133735;
+        }
+
+        .project-card:hover {
+            transform: translateY(-6px);
+            border-color: #25d0fa;
+            box-shadow: 0 10px 25px #00a9ff25;
+        }
+
+        .project-category {
+            display: inline-block;
+            background: #087bc5;
+            color: #a4edff;
+            border: 1px solid #31b9eb;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            margin-bottom: 17px;
+        }
+
+        .project-card h3 {
+            font-size: 19px;
+            margin-bottom: 12px;
+            color: white;
+        }
+
+        .project-description {
+            font-size: 13px;
+            color: #c4def8;
+            line-height: 1.7;
+            margin-bottom: 18px;
+            min-height: 65px;
+        }
+
+        .skills-title {
+            color: #5bdcff;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-bottom: 20px;
+        }
+
+        .skill {
+            background: #07356e;
+            border: 1px solid #286db0;
+            color: #b8e8ff;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+        }
+
+        .project-info {
+            border-top: 1px solid #3474ad;
+            padding-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            color: #b6d9fa;
+            font-size: 12px;
+            margin-bottom: 17px;
         }
 
         .view-btn {
-            background: linear-gradient(135deg, #25cdf5, #147de5);
+            display: block;
+            text-align: center;
+            padding: 11px;
+            border-radius: 8px;
+            background: linear-gradient(
+                90deg,
+                #12b8e9,
+                #19d5ef
+            );
+
             color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 7px;
+            font-weight: bold;
             font-size: 13px;
-            text-decoration: none;
+            transition: 0.3s;
         }
 
         .view-btn:hover {
-            color: white;
-            opacity: 0.9;
+            background: #078dc8;
         }
 
-        /* FOOTER */
+        /* --------------------------------
+           EMPTY RESULTS
+        --------------------------------- */
 
-        footer {
-            background: rgba(3, 16, 43, 0.9);
-            border-top: 1px solid rgba(70,190,255,0.2);
-            padding: 25px;
+        .empty-state {
             text-align: center;
-            color: #9db8d5;
+            background: #0d3978;
+            border: 1px dashed #398bd0;
+            border-radius: 15px;
+            padding: 65px 20px;
+            margin-top: 20px;
+        }
+
+        .empty-icon {
+            font-size: 40px;
+            margin-bottom: 18px;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: #bad7f5;
             font-size: 13px;
         }
 
-        /* MOBILE */
+        .empty-state a {
+            display: inline-block;
+            margin-top: 20px;
+            background: #16bde9;
+            padding: 11px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+        }
 
-        @media(max-width: 768px) {
+        /* --------------------------------
+           FOOTER
+        --------------------------------- */
 
-            .page-header {
-                padding: 40px 5% 25px;
+        footer {
+            border-top: 1px solid #28649d;
+            margin-top: 55px;
+            padding: 20px;
+            text-align: center;
+            color: #9fc5e9;
+            font-size: 12px;
+        }
+
+        /* --------------------------------
+           RESPONSIVE DESIGN
+        --------------------------------- */
+
+        @media(max-width: 850px) {
+
+            .sidebar {
+                width: 190px;
+                min-width: 190px;
             }
 
-            .page-header h1 {
-                font-size: 32px;
+            .main-content {
+                padding: 25px 20px;
             }
 
-            .search-section,
-            .ideas-section {
-                padding-left: 5%;
-                padding-right: 5%;
+            .search-form {
+                flex-wrap: wrap;
             }
 
-            .login-btn,
-            .register-btn {
-                display: inline-block;
-                margin-top: 8px;
+            .search-input {
+                flex-basis: 100%;
             }
+
+        }
+
+        @media(max-width: 600px) {
+
+            .dashboard {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                min-width: 100%;
+                padding: 15px;
+            }
+
+            .logo {
+                margin-bottom: 15px;
+            }
+
+            .menu {
+                display: flex;
+                overflow-x: auto;
+                gap: 5px;
+            }
+
+            .menu a {
+                white-space: nowrap;
+                margin-bottom: 0;
+            }
+
+            .sidebar-bottom {
+                display: none;
+            }
+
+            .main-content {
+                padding: 22px 15px;
+            }
+
+            .intro h1 {
+                font-size: 27px;
+            }
+
+            .category-select,
+            .search-btn {
+                width: 100%;
+            }
+
+            .results-header {
+                align-items: flex-start;
+                gap: 10px;
+                flex-direction: column;
+            }
+
         }
 
     </style>
+
 </head>
 
 <body>
 
-<!-- NAVBAR -->
+<div class="dashboard">
 
-<nav class="navbar navbar-expand-lg navbar-custom">
+    <!-- SIDEBAR -->
 
-    <div class="container-fluid">
+    <aside class="sidebar">
 
-        <a href="index.html" class="brand">
-            <span class="brand-icon">💡</span>
-            IdeaVault
-        </a>
+        <div class="logo">
+            <span>IV</span> IdeaVault
+        </div>
 
-        <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <nav class="menu">
 
-        <div class="collapse navbar-collapse" id="navbarNav">
+            <a href="dashboard.html">
+                ◉ Dashboard
+            </a>
 
-            <ul class="navbar-nav mx-auto">
+            <a href="dashboard.html#profile">
+                ◯ My Profile
+            </a>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="index.html">Home</a>
-                </li>
+            <a href="submit-idea.php">
+                ＋ Share Idea
+            </a>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="explore-ideas.php">
-                        Explore Ideas
-                    </a>
-                </li>
+            <a href="explore-ideas.php" class="active">
+                ⌕ Explore Ideas
+            </a>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="submit-idea.php">
-                        Submit Idea
-                    </a>
-                </li>
+            <a href="find-team.php">
+                ♧ Find Team
+            </a>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="find-team.php">
-                        Find Team
-                    </a>
-                </li>
+            <a href="my-projects.php">
+                ▣ My Projects
+            </a>
 
-            </ul>
+        </nav>
 
-            <div>
-                <a href="login.html" class="login-btn">Login</a>
-                <a href="register.html" class="register-btn">Register</a>
-            </div>
+        <div class="sidebar-bottom">
+
+            <a href="index.html">
+                ← Website
+            </a>
+
+            <a href="login.html">
+                ↪ Logout
+            </a>
 
         </div>
 
-    </div>
-
-</nav>
+    </aside>
 
 
-<!-- PAGE HEADER -->
+    <!-- MAIN CONTENT -->
 
-<section class="page-header">
+    <main class="main-content">
 
-    <div class="small-title">
-        Discover • Connect • Create
-    </div>
+        <!-- TOP BAR -->
 
-    <h1>Explore Project Ideas</h1>
+        <header class="topbar">
 
-    <p>
-        Discover innovative ideas shared by students, find projects
-        that match your interests and connect with people who can
-        help bring those ideas to life.
-    </p>
+            <div>
+                <small>DISCOVER</small>
+                <h2>Explore Ideas</h2>
+            </div>
 
-</section>
+            <div class="profile">
+                Student Workspace
+            </div>
+
+        </header>
 
 
-<!-- SEARCH + FILTER -->
+        <!-- INTRODUCTION -->
 
-<section class="search-section">
+        <section class="intro">
 
-    <div class="search-box">
+            <span class="tag">
+                DISCOVER NEW OPPORTUNITIES
+            </span>
 
-        <div class="row g-3">
+            <h1>
+                Explore Project
+                <span>Ideas.</span>
+            </h1>
 
-            <div class="col-lg-7">
+            <p>
+                Discover innovative projects shared by students.
+                Find ideas that match your interests, explore new
+                technologies and connect with future teammates.
+            </p>
+
+        </section>
+
+
+        <!-- SEARCH FORM -->
+
+        <section class="search-section">
+
+            <form action="explore-ideas.php"
+                  method="GET"
+                  class="search-form">
 
                 <input
                     type="text"
-                    id="searchInput"
-                    class="form-control search-input"
-                    placeholder="🔍 Search project ideas..."
-                    onkeyup="searchIdeas()">
-
-            </div>
-
-            <div class="col-lg-3">
+                    name="search"
+                    class="search-input"
+                    placeholder="⌕ Search by project name, category or skill..."
+                    value="<?php echo clean($search); ?>"
+                >
 
                 <select
-                    id="categoryFilter"
-                    class="form-select search-input"
-                    onchange="filterIdeas()">
+                    name="category"
+                    class="category-select">
 
-                    <option value="all">All Categories</option>
-                    <option value="Web Development">Web Development</option>
-                    <option value="AI & ML">AI & ML</option>
-                    <option value="Education">Education</option>
-                    <option value="Finance">Finance</option>
-                    <option value="Environment">Environment</option>
+                    <option value="">All Categories</option>
+
+                    <?php foreach ($categories as $cat): ?>
+
+                        <option
+                            value="<?php echo clean($cat); ?>"
+                            <?php
+                            echo ($category === $cat)
+                                ? 'selected'
+                                : '';
+                            ?>
+                        >
+                            <?php echo clean($cat); ?>
+                        </option>
+
+                    <?php endforeach; ?>
 
                 </select>
 
-            </div>
-
-            <div class="col-lg-2">
-
-                <button
-                    class="filter-btn w-100"
-                    onclick="resetFilters()">
-
-                    Reset
-
+                <button type="submit" class="search-btn">
+                    Search Ideas
                 </button>
 
-            </div>
+            </form>
 
-        </div>
+            <a href="explore-ideas.php" class="clear-btn">
+                ↻ Clear Search
+            </a>
 
-    </div>
-
-</section>
+        </section>
 
 
-<!-- IDEA CARDS -->
+        <!-- PROJECT RESULTS -->
 
-<section class="ideas-section">
+        <section>
 
-    <div class="row g-4" id="ideasContainer">
+            <div class="results-header">
 
-        <?php foreach ($ideas as $idea): ?>
+                <h2>Available Project Ideas</h2>
 
-        <div
-            class="col-md-6 col-lg-4 idea-item"
-            data-title="<?php echo strtolower($idea['title']); ?>"
-            data-category="<?php echo $idea['category']; ?>">
-
-            <div class="idea-card">
-
-                <span class="category">
-                    <?php echo $idea['category']; ?>
+                <span class="results-count">
+                    <?php echo count($projects); ?>
+                    Project(s) Found
                 </span>
 
-                <h3>
-                    <?php echo $idea['title']; ?>
-                </h3>
+            </div>
 
-                <p>
-                    <?php echo $idea['description']; ?>
-                </p>
 
-                <div class="difficulty">
-                    ⚡ Difficulty:
-                    <strong><?php echo $idea['difficulty']; ?></strong>
-                </div>
+            <?php if (count($projects) > 0): ?>
 
-                <div>
+                <div class="project-grid">
 
-                    <?php foreach ($idea['technologies'] as $tech): ?>
+                    <?php foreach ($projects as $project): ?>
 
-                        <span class="tech-tag">
-                            <?php echo $tech; ?>
-                        </span>
+                        <div class="project-card">
+
+                            <span class="project-category">
+                                <?php echo clean($project['category']); ?>
+                            </span>
+
+                            <h3>
+                                <?php echo clean($project['title']); ?>
+                            </h3>
+
+                            <p class="project-description">
+
+                                <?php
+                                $description = $project['description'];
+
+                                if (strlen($description) > 130) {
+                                    echo clean(substr($description, 0, 130))
+                                         . "...";
+                                } else {
+                                    echo clean($description);
+                                }
+                                ?>
+
+                            </p>
+
+                            <div class="skills-title">
+                                SKILLS REQUIRED
+                            </div>
+
+                            <div class="skills">
+
+                                <?php
+
+                                $skills = explode(
+                                    ',',
+                                    $project['skills_needed'] ?? ''
+                                );
+
+                                foreach ($skills as $skill):
+
+                                    if (trim($skill) !== ''):
+
+                                ?>
+
+                                    <span class="skill">
+                                        <?php echo clean(trim($skill)); ?>
+                                    </span>
+
+                                <?php
+                                    endif;
+                                endforeach;
+                                ?>
+
+                            </div>
+
+
+                            <div class="project-info">
+
+                                <span>
+                                    Team Size:
+                                    <?php
+                                    echo clean($project['team_size']);
+                                    ?>
+                                </span>
+
+                                <span>
+                                    <?php
+                                    echo !empty($project['created_at'])
+                                        ? date(
+                                            'd M Y',
+                                            strtotime($project['created_at'])
+                                        )
+                                        : '';
+                                    ?>
+                                </span>
+
+                            </div>
+
+
+                            <a
+                                href="project-details.php?id=<?php
+                                    echo (int)$project['id'];
+                                ?>"
+                                class="view-btn">
+
+                                View Project Details →
+
+                            </a>
+
+                        </div>
 
                     <?php endforeach; ?>
 
                 </div>
 
-                <div class="card-bottom">
 
-                    <span class="members">
-                        👥 <?php echo $idea['members']; ?> members needed
-                    </span>
+            <?php else: ?>
 
-                    <a href="project-details.php" class="view-btn">
-                        View Idea
+                <!-- NO PROJECT FOUND -->
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        🔍
+                    </div>
+
+                    <h3>No Project Ideas Found</h3>
+
+                    <p>
+                        We couldn't find any projects matching
+                        your search. Try another keyword or category.
+                    </p>
+
+                    <a href="explore-ideas.php">
+                        View All Projects
                     </a>
 
                 </div>
 
-            </div>
+            <?php endif; ?>
 
-        </div>
-
-        <?php endforeach; ?>
-
-    </div>
-
-</section>
+        </section>
 
 
-<!-- FOOTER -->
+        <!-- FOOTER -->
 
-<footer>
+        <footer>
 
-    © 2026 IdeaVault • Where Ideas Find Their Team
+            <p>
+                © 2026 IdeaVault |
+                Student Project Collaboration Platform
+            </p>
 
-</footer>
+        </footer>
 
+    </main>
 
-<!-- BOOTSTRAP JS -->
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-
-<script>
-
-function searchIdeas() {
-
-    let search =
-        document.getElementById("searchInput")
-        .value
-        .toLowerCase();
-
-    let cards =
-        document.querySelectorAll(".idea-item");
-
-    cards.forEach(function(card) {
-
-        let title =
-            card.getAttribute("data-title");
-
-        if (title.includes(search)) {
-            card.style.display = "";
-        } else {
-            card.style.display = "none";
-        }
-
-    });
-
-}
-
-
-function filterIdeas() {
-
-    let category =
-        document.getElementById("categoryFilter").value;
-
-    let cards =
-        document.querySelectorAll(".idea-item");
-
-    cards.forEach(function(card) {
-
-        let cardCategory =
-            card.getAttribute("data-category");
-
-        if (category === "all" ||
-            cardCategory === category) {
-
-            card.style.display = "";
-
-        } else {
-
-            card.style.display = "none";
-
-        }
-
-    });
-
-}
-
-
-function resetFilters() {
-
-    document.getElementById("searchInput").value = "";
-
-    document.getElementById("categoryFilter").value = "all";
-
-    let cards =
-        document.querySelectorAll(".idea-item");
-
-    cards.forEach(function(card) {
-        card.style.display = "";
-    });
-
-}
-
-</script>
+</div>
 
 </body>
 </html>
